@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+        <meta name="viewport"
+            content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+        <meta name="robots" content="noindex,nofollow">
+        <title>Skysign-Cloud</title>
+        <script src="./Cesium/Cesium.js"></script>
+        <link href="./Cesium/Widgets/widgets.css" rel="stylesheet">
+        <link rel="stylesheet" href="index.css" media="screen">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <table class="button_table">
+            <tbody>
+                <tr><td><img src="/logo_transparent.png" class="logo"/></td></tr>
+                <tr><td><div class="button_group"><div class="button_group_title" disabled>COMMANDS</div></div></td></tr>
+                <tr><td><button type="button" id="button_arm" onClick="arm()" class="button" disabled>ARM</button></td></tr>
+                <tr><td><button type="button" id="button_disarm" onClick="disarm()" class="button" disabled>DISARM</button></td></tr>
+                <tr><td><button type="button" id="button_takeoff" onClick="takeoff()" class="button" disabled>TAKEOFF</button></td></tr>
+                <tr><td><button type="button" id="button_land" onClick="land()" class="button" disabled>LAND</button></td></tr>
+                <tr><td><button type="button" id="button_rtl" onClick="rtl()" class="button" disabled>RETURN</button></td></tr>
+                <tr><td><button type="button" id="button_upload" onClick="upload()" class="button" disabled>UPLOAD</button></td></tr>
+                <tr><td><button type="button" id="button_start" onClick="start()" class="button" disabled>START</button></td></tr>
+                <tr><td><button type="button" id="button_pause" onClick="pause()" class="button" disabled>PAUSE</button></td></tr>
+                <tr><td><div class="button_group"><div class="button_group_title" disabled>PLANNING</div></div></td></tr>
+                <tr><td><button type="button" id="button_mission" onClick="mission()" class="button" disabled>MISSION</button></td></tr>
+                <tr><td><button type="button" id="button_clear" onClick="clearMission()" class="button" disabled>CLEAR</button></td></tr>
+            </tbody>
+        </table>
+        <div id="cesiumContainer"></div>
+        <div id="baseLayerPickerContainer" style="position:absolute;top:24px;right:24px;width:38px;height:38px;z-index: 1000;"></div>
+        
+        <script src="./Keys.js"></script>
+        <script src="./App.js"></script>
+        <div id="message_container"></div>
+    </body>
+</html>
