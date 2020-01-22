@@ -125,9 +125,9 @@ function telemetryReceive(event) {
         new Cesium.Cartesian3(0, 0, 1),
         Cesium.Math.toRadians(90)
     );
-    var quatlocal = Cesium.Quaternion.multiply(quatlocal, quat90, new Cesium.Quaternion());
+    var quatlocalaft = Cesium.Quaternion.multiply(quatlocal, quat90, new Cesium.Quaternion());
     // 回転を掛け合わせる
-    var quat = Cesium.Quaternion.multiply(base, quatlocal, new Cesium.Quaternion());
+    var quat = Cesium.Quaternion.multiply(base, quatlocalaft, new Cesium.Quaternion());
 
     // ローカルクォータニオンをオイラー角に変換
     var hpr = Cesium.HeadingPitchRoll.fromQuaternion(quatlocal);
