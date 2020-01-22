@@ -135,12 +135,13 @@ function telemetryReceive(event) {
     var description =   '<table class="cesium-infoBox-defaultTable"><tbody>' +
                         '<tr><th>機体ID</th><td>' + controlVehicle.vehicleId + '</td></tr>' +
                         '<tr><th>飛行モード</th><td>' + telemetry.flightMode + '</td></tr>' +
-                        '<tr><th>緯度</th><td>' + telemetry.position.cartographicDegrees[1] + '</td></tr>' +
-                        '<tr><th>経度</th><td>' + telemetry.position.cartographicDegrees[0] + '</td></tr>' +
-                        '<tr><th>高度</th><td>' + telemetry.position.cartographicDegrees[2] + '</td></tr>' +
-                        '<tr><th>ヘディング(°)</th><td>' + Cesium.Math.toDegrees(hpr.heading) + '</td></tr>' +
-                        '<tr><th>ピッチ(°)</th><td>' + Cesium.Math.toDegrees(hpr.pitch) + '</td></tr>' +
-                        '<tr><th>ロール(°)</th><td>' + Cesium.Math.toDegrees(hpr.roll) + '</td></tr>' +
+                        '<tr><th>緯度(°)</th><td>' + dispFloor(telemetry.position.cartographicDegrees[1], 10) + '</td></tr>' +
+                        '<tr><th>経度(°)</th><td>' + dispFloor(telemetry.position.cartographicDegrees[0], 10) + '</td></tr>' +
+                        '<tr><th>海抜高度(m)</th><td>' + dispFloor(telemetry.position.cartographicDegrees[2], 10) + '</td></tr>' +
+                        '<tr><th>相対高度(m)</th><td>' + dispFloor(telemetry.position.cartographicDegrees[3], 10) + '</td></tr>' +
+                        '<tr><th>ヘディング(°)</th><td>' + dispFloor(Cesium.Math.toDegrees(hpr.heading), 10) + '</td></tr>' +
+                        '<tr><th>ピッチ(°)</th><td>' + dispFloor(Cesium.Math.toDegrees(hpr.pitch), 10) + '</td></tr>' +
+                        '<tr><th>ロール(°)</th><td>' + dispFloor(Cesium.Math.toDegrees(hpr.roll), 10) + '</td></tr>' +
                         '</tbody></table>';
 
     var vehicleId = "drone_" + telemetry.vehicleID;
@@ -728,11 +729,11 @@ function doubleClickeEvent(clickEvent) {
 
                 var description =   '<table class="cesium-infoBox-defaultTable"><tbody>' +
                                     '<tr><th>機体ID</th><td>' + controlVehicle.vehicleId + '</td></tr>' +
-                                    '<tr><th>緯度</th><td>' + latitude + '</td></tr>' +
-                                    '<tr><th>経度</th><td>' + longitude + '</td></tr>' +
-                                    '<tr><th>地表高度</th><td>' + height + '</td></tr>' +
-                                    '<tr><th>対地高度</th><td>' + defaultHeight + '</td></tr>' +
-                                    '<tr><th>相対高度</th><td>' + relativeHeight + '</td></tr>' +
+                                    '<tr><th>緯度(°)</th><td>' + dispFloor(latitude, 10) + '</td></tr>' +
+                                    '<tr><th>経度(°)</th><td>' + dispFloor(longitude, 10) + '</td></tr>' +
+                                    '<tr><th>地表高度(m)</th><td>' + dispFloor(height, 10) + '</td></tr>' +
+                                    '<tr><th>対地高度(m)</th><td>' + dispFloor(defaultHeight, 10) + '</td></tr>' +
+                                    '<tr><th>相対高度(m)</th><td>' + dispFloor(relativeHeight, 10) + '</td></tr>' +
                                     '</tbody></table>';
 
                 var packet = {
@@ -896,4 +897,8 @@ function createMissionItems(vehicleId) {
         missionItems.push(missionItem);
     }
     return missionItems;
+}
+
+function dispFloor(num, digit) {
+    return Math.floor(num * Math.pow(10, digit) ) / Math.pow(10, digit);
 }

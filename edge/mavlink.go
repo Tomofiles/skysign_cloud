@@ -259,6 +259,7 @@ func (mavlink *Mavlink) Listen() {
 				path = append(path, position.GetLongitudeDeg())
 				path = append(path, position.GetLatitudeDeg())
 				path = append(path, float64(position.GetAbsoluteAltitudeM()))
+				path = append(path, float64(position.GetRelativeAltitudeM()))
 				mavlink.Path = path
 				rwm.Unlock()
 			case quaternion := <-quaternionStream:
