@@ -129,6 +129,8 @@ function telemetryReceive(event) {
     // 回転を掛け合わせる
     var quat = Cesium.Quaternion.multiply(base, quatlocal, new Cesium.Quaternion());
 
+    // ローカルクォータニオンをオイラー角に変換
+    var hpr = Cesium.HeadingPitchRoll.fromQuaternion(quatlocal);
 
     var description =   '<table class="cesium-infoBox-defaultTable"><tbody>' +
                         '<tr><th>機体ID</th><td>' + controlVehicle.vehicleId + '</td></tr>' +
@@ -136,10 +138,9 @@ function telemetryReceive(event) {
                         '<tr><th>緯度</th><td>' + telemetry.position.cartographicDegrees[1] + '</td></tr>' +
                         '<tr><th>経度</th><td>' + telemetry.position.cartographicDegrees[0] + '</td></tr>' +
                         '<tr><th>高度</th><td>' + telemetry.position.cartographicDegrees[2] + '</td></tr>' +
-                        '<tr><th>クォータニオン(x)</th><td>' + quat.x + '</td></tr>' +
-                        '<tr><th>クォータニオン(y)</th><td>' + quat.y + '</td></tr>' +
-                        '<tr><th>クォータニオン(z)</th><td>' + quat.z + '</td></tr>' +
-                        '<tr><th>クォータニオン(w)</th><td>' + quat.w + '</td></tr>' +
+                        '<tr><th>ヘディング(°)</th><td>' + Cesium.Math.toDegrees(hpr.heading) + '</td></tr>' +
+                        '<tr><th>ピッチ(°)</th><td>' + Cesium.Math.toDegrees(hpr.pitch) + '</td></tr>' +
+                        '<tr><th>ロール(°)</th><td>' + Cesium.Math.toDegrees(hpr.roll) + '</td></tr>' +
                         '</tbody></table>';
 
     var vehicleId = "drone_" + telemetry.vehicleID;
