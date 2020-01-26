@@ -13,27 +13,33 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     </head>
     <body>
-        <table class="button_table">
-            <tbody>
-                <tr><td><img src="/logo_transparent.png" class="logo"/></td></tr>
-                <tr><td><div class="button_group"><div class="button_group_title" disabled>COMMANDS</div></div></td></tr>
-                <tr><td><button type="button" id="button_arm" onClick="arm()" class="button" disabled>ARM</button></td></tr>
-                <tr><td><button type="button" id="button_disarm" onClick="disarm()" class="button" disabled>DISARM</button></td></tr>
-                <tr><td><button type="button" id="button_takeoff" onClick="takeoff()" class="button" disabled>TAKEOFF</button></td></tr>
-                <tr><td><button type="button" id="button_land" onClick="land()" class="button" disabled>LAND</button></td></tr>
-                <tr><td><button type="button" id="button_rtl" onClick="rtl()" class="button" disabled>RETURN</button></td></tr>
-                <tr><td><button type="button" id="button_upload" onClick="upload()" class="button" disabled>UPLOAD</button></td></tr>
-                <tr><td><button type="button" id="button_start" onClick="start()" class="button" disabled>START</button></td></tr>
-                <tr><td><button type="button" id="button_pause" onClick="pause()" class="button" disabled>PAUSE</button></td></tr>
-                <tr><td><div class="button_group"><div class="button_group_title" disabled>PLANNING</div></div></td></tr>
-                <tr><td><button type="button" id="button_mission" onClick="mission()" class="button" disabled>MISSION</button></td></tr>
-                <tr><td><button type="button" id="button_clear" onClick="clearMission()" class="button" disabled>CLEAR</button></td></tr>
-            </tbody>
-        </table>
+        <div id="side-menu">
+            <table class="button_table">
+                <tbody>
+                    <tr><td><img src="/logo_transparent.png" class="logo"/></td></tr>
+                    <tr><td><div class="button_group"><div class="button_group_title">COMMANDS</div></div></td></tr>
+                    <tr><td><button type="button" id="button_arm" onClick="arm()" class="button" data-bind="enable: arm()" disabled>ARM</button></td></tr>
+                    <tr><td><button type="button" id="button_disarm" onClick="disarm()" class="button" data-bind="enable: disarm()" disabled>DISARM</button></td></tr>
+                    <tr><td><button type="button" id="button_takeoff" onClick="takeoff()" class="button" data-bind="enable: takeoff()" disabled>TAKEOFF</button></td></tr>
+                    <tr><td><button type="button" id="button_land" onClick="land()" class="button" data-bind="enable: land()" disabled>LAND</button></td></tr>
+                    <tr><td><button type="button" id="button_rtl" onClick="rtl()" class="button" data-bind="enable: rtl()" disabled>RETURN</button></td></tr>
+                    <tr><td><button type="button" id="button_upload" onClick="upload()" class="button" data-bind="enable: upload()" disabled>UPLOAD</button></td></tr>
+                    <tr><td><button type="button" id="button_start" onClick="start()" class="button" data-bind="enable: start()" disabled>START</button></td></tr>
+                    <tr><td><button type="button" id="button_pause" onClick="pause()" class="button" data-bind="enable: pause()" disabled>PAUSE</button></td></tr>
+                    <tr><td><div class="button_group"><div class="button_group_title">PLANNING</div></div></td></tr>
+                    <tr><td><button type="button" id="button_mission" onClick="mission()" class="button" data-bind="enable: mission(), class: selected()" disabled>MISSION</button></td></tr>
+                    <tr><td><button type="button" id="button_clear" onClick="clearMission()" class="button" data-bind="enable: clear()" disabled>CLEAR</button></td></tr>
+                </tbody>
+            </table>
+        </div>
         <div id="cesiumContainer"></div>
-        <div id="baseLayerPickerContainer" style="position:absolute;top:24px;right:24px;width:38px;height:38px;z-index: 1000;"></div>
+        <div id="baseLayerPickerContainer"></div>
+        <div id="waypointEditContainer"></div>
         
         <script src="./Keys.js"></script>
+        <script src="./CesiumViewer.js"></script>
+        <script src="./ComponentViewer.js"></script>
+        <script src="./Model.js"></script>
         <script src="./App.js"></script>
         <div id="message_container"></div>
     </body>
