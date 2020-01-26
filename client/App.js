@@ -59,20 +59,20 @@ let viewer = (() => {
     });
 
     viewer.clock.shouldAnimate = true;
-    var initialPosition = new Cesium.Cartesian3.fromDegrees(139.2540635, 35.6680669, 300);
-    var homeCameraView = {
+    let initialPosition = new Cesium.Cartesian3.fromDegrees(139.2540635, 35.6680669, 300);
+    let homeCameraView = {
         destination : initialPosition,
     };
     viewer.scene.camera.setView(homeCameraView);
 
-    var handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+    let handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
     handler.setInputAction(doubleClickEvent, Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
     handler.setInputAction(mouseMoveEvent, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
 
     viewer.selectedEntityChanged.addEventListener(selectedEntityChange);
 
-    var telemetryStreamUrl = '/client/telemetry';
-    var telemetryEventSource = new EventSource(telemetryStreamUrl);
+    let telemetryStreamUrl = '/client/telemetry';
+    let telemetryEventSource = new EventSource(telemetryStreamUrl);
     telemetryEventSource.onmessage = telemetryReceive
 
     viewer.dataSources.add(czmlStream);
@@ -272,13 +272,13 @@ function doubleClickEvent(clickEvent) {
     }
 
     if (viewer.scene.pickPositionSupported) {
-        var cartesian = viewer.scene.pickPosition(clickEvent.position);
+        let cartesian = viewer.scene.pickPosition(clickEvent.position);
 
         if (Cesium.defined(cartesian)) {
-            var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-            var longitude = Cesium.Math.toDegrees(cartographic.longitude);
-            var latitude = Cesium.Math.toDegrees(cartographic.latitude);
-            var height = cartographic.height;
+            let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+            let longitude = Cesium.Math.toDegrees(cartographic.longitude);
+            let latitude = Cesium.Math.toDegrees(cartographic.latitude);
+            let height = cartographic.height;
 
             let point = new Position(longitude, latitude, height);
             buttonStateViewModel.selectedDrone.missionState.addWaypoint(point);
@@ -297,8 +297,8 @@ function changeHeightScale(heightScale) {
 }
 
 function arm() {
-    var vehicleID = buttonStateViewModel.selectedDrone.vehicleID;
-    var data = {
+    let vehicleID = buttonStateViewModel.selectedDrone.vehicleID;
+    let data = {
         vehicleID: vehicleID,
         messageID: "arm",
         payload: {}
@@ -319,8 +319,8 @@ function arm() {
 }
 
 function disarm() {
-    var vehicleID = buttonStateViewModel.selectedDrone.vehicleID;
-    var data = {
+    let vehicleID = buttonStateViewModel.selectedDrone.vehicleID;
+    let data = {
         vehicleID: vehicleID,
         messageID: "disarm",
         payload: {}
@@ -341,8 +341,8 @@ function disarm() {
 }
 
 function takeoff() {
-    var vehicleID = buttonStateViewModel.selectedDrone.vehicleID;
-    var data = {
+    let vehicleID = buttonStateViewModel.selectedDrone.vehicleID;
+    let data = {
         vehicleID: vehicleID,
         messageID: "takeoff",
         payload: {}
@@ -363,8 +363,8 @@ function takeoff() {
 }
 
 function land() {
-    var vehicleID = buttonStateViewModel.selectedDrone.vehicleID;
-    var data = {
+    let vehicleID = buttonStateViewModel.selectedDrone.vehicleID;
+    let data = {
         vehicleID: vehicleID,
         messageID: "land",
         payload: {}
@@ -385,8 +385,8 @@ function land() {
 }
 
 function rtl() {
-    var vehicleID = buttonStateViewModel.selectedDrone.vehicleID;
-    var data = {
+    let vehicleID = buttonStateViewModel.selectedDrone.vehicleID;
+    let data = {
         vehicleID: vehicleID,
         messageID: "rtl",
         payload: {}
@@ -407,8 +407,8 @@ function rtl() {
 }
 
 function upload() {
-    var vehicleID = buttonStateViewModel.selectedDrone.vehicleID;
-    var data = {
+    let vehicleID = buttonStateViewModel.selectedDrone.vehicleID;
+    let data = {
         vehicleID: vehicleID,
         messageID: "upload",
         payload: {
@@ -431,8 +431,8 @@ function upload() {
 }
 
 function start() {
-    var vehicleID = buttonStateViewModel.selectedDrone.vehicleID;
-    var data = {
+    let vehicleID = buttonStateViewModel.selectedDrone.vehicleID;
+    let data = {
         vehicleID: vehicleID,
         messageID: "start",
         payload: {}
@@ -453,8 +453,8 @@ function start() {
 }
 
 function pause() {
-    var vehicleID = buttonStateViewModel.selectedDrone.vehicleID;
-    var data = {
+    let vehicleID = buttonStateViewModel.selectedDrone.vehicleID;
+    let data = {
         vehicleID: vehicleID,
         messageID: "pause",
         payload: {}

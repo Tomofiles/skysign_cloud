@@ -1,6 +1,6 @@
 let czmlStream = (function() {
     let czmlStream = new Cesium.CzmlDataSource();
-    var doc = {
+    let doc = {
         id: "document",
         version: "1.0"
     };
@@ -15,7 +15,7 @@ function drowMouseOverState(position) {
         return element._id.startsWith("groundpoint_");
     })
     .forEach((element, index, array) => {
-        var packet = {
+        let packet = {
             id: element._id,
             point: {
                 pixelSize: 17.0
@@ -24,11 +24,11 @@ function drowMouseOverState(position) {
         czmlStream.process(packet);
     });
 
-    var pickedObjects = viewer.scene.drillPick(position);
+    let pickedObjects = viewer.scene.drillPick(position);
     for (pickedObject of pickedObjects) {
         if (Cesium.defined(pickedObject)) {
             if (pickedObject.id._id.startsWith("groundpoint_")) {
-                var packet = {
+                let packet = {
                     id: pickedObject.id._id,
                     point: {
                         pixelSize: 30.0
@@ -91,7 +91,7 @@ function drowDroneState(vehicleID, droneState) {
 
     let packet = {
         id: entityID,
-        name: vehicleID,
+        name: "drone " + vehicleID,
         model: {
             gltf: "scene.gltf",
             scale: 0.05,
@@ -209,7 +209,7 @@ function drowMissionPoints(vehicleID, maxPointNum, missionPoints) {
         czmlStream.process(linePacket);
 
         if (pointIndex !== 1) {
-            var pathId = "path_" + pointIndex + "_" + vehicleID;
+            let pathId = "path_" + pointIndex + "_" + vehicleID;
             let preAirPointID = "airpoint_" + (pointIndex - 1) + "_" + vehicleID;
             let pathPacket = {
                 id: pathId,
@@ -260,7 +260,7 @@ function drowMissionPoints(vehicleID, maxPointNum, missionPoints) {
         czmlStream.process(linePacket);
 
         if (i !== 1) {
-            var pathId = "path_" + i + "_" + vehicleID;
+            let pathId = "path_" + i + "_" + vehicleID;
             let pathPacket = {
                 id: pathId,
                 delete: true
@@ -374,7 +374,7 @@ function getDrowTrajectoryStateFunc(vehicleID) {
 }
 
 function drowTrajectoryState(vehicleID, trajectoryPoints) {
-    var cartographicDegrees = [];
+    let cartographicDegrees = [];
     for (let trajectoryPoint of trajectoryPoints) {
         cartographicDegrees.push(trajectoryPoint.longitude);
         cartographicDegrees.push(trajectoryPoint.latitude);
