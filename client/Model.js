@@ -9,19 +9,19 @@ function ButtonStateViewModel() {
         return this.selectedDrone !== undefined && this.selectedDrone.videoStreamingState.display ? "selected" : ""
     },
     this.arm = () => {
-        return this.selectedDrone !== undefined
+        return this.selectedDrone !== undefined && !this.selectedDrone.droneState.arm
     },
     this.disarm = () => {
-        return this.selectedDrone !== undefined
+        return this.selectedDrone !== undefined && this.selectedDrone.droneState.arm
     },
     this.takeoff = () => {
-        return this.selectedDrone !== undefined
+        return this.selectedDrone !== undefined && this.selectedDrone.droneState.arm
     },
     this.land = () => {
-        return this.selectedDrone !== undefined
+        return this.selectedDrone !== undefined && this.selectedDrone.droneState.arm
     },
     this.rtl = () => {
-        return this.selectedDrone !== undefined
+        return this.selectedDrone !== undefined && this.selectedDrone.droneState.arm
     },
     this.mission = () => {
         return this.selectedDrone !== undefined
@@ -30,16 +30,16 @@ function ButtonStateViewModel() {
         return this.selectedDrone !== undefined && !this.selected() && this.selectedDrone.missionState !== undefined && this.selectedDrone.missionState.missionPoints.length !== 0
     },
     this.start = () => {
-        return this.selectedDrone !== undefined && !this.selected() && this.selectedDrone.missionState !== undefined && this.selectedDrone.missionState.missionPoints.length !== 0
+        return this.selectedDrone !== undefined && this.selectedDrone.droneState.arm && !this.selected() && this.selectedDrone.missionState !== undefined && this.selectedDrone.missionState.missionPoints.length !== 0
     },
     this.pause = () => {
-        return this.selectedDrone !== undefined && !this.selected() && this.selectedDrone.missionState !== undefined && this.selectedDrone.missionState.missionPoints.length !== 0
+        return this.selectedDrone !== undefined && this.selectedDrone.droneState.arm && !this.selected() && this.selectedDrone.missionState !== undefined && this.selectedDrone.missionState.missionPoints.length !== 0
     },
     this.selected = () => {
         return this.planning ? "selected" : ""
     },
     this.clear = () => {
-        return this.selectedDrone !== undefined && this.selected() && this.selectedDrone.missionState !== undefined && this.selectedDrone.missionState.missionPoints.length !== 0
+        return this.selectedDrone !== undefined && this.selected() && (this.selectedDrone.trajectoryState.trajectoryShow || (this.selectedDrone.missionState !== undefined && this.selectedDrone.missionState.missionPoints.length !== 0))
     },
     this.streamon = () => {
         return this.selectedDrone !== undefined && !this.selectedDrone.videoStreamingState.streaming
