@@ -1,3 +1,5 @@
+const jsFrame = new JSFrame();
+
 let groundHeightSub = undefined;
 let heightScaleSub = undefined;
 let missionPointsSub = undefined;
@@ -7,9 +9,8 @@ let droneStateList = [];
 
 let buttonStateViewModel = (() => {
     let buttonStateViewModel = new ButtonStateViewModel();
-    Cesium.knockout.track(buttonStateViewModel);
 
-    let sideMenu = document.getElementById('side-menu');
+    let sideMenu = document.getElementById('side_menu');
     Cesium.knockout.applyBindings(buttonStateViewModel, sideMenu);
 
     return buttonStateViewModel;
@@ -18,7 +19,7 @@ let buttonStateViewModel = (() => {
 let viewer = (() => {
     "use strict";
 
-    let viewer = new Cesium.Viewer('cesiumContainer', {
+    let viewer = new Cesium.Viewer('cesium_container', {
         scene3DOnly: true,
         selectionIndicator: false,
         baseLayerPicker: false,
@@ -52,7 +53,7 @@ let viewer = (() => {
         }
     }));
 
-    Cesium.BaseLayerPicker('baseLayerPickerContainer', {
+    Cesium.BaseLayerPicker('base_layer_picker_container', {
         globe : viewer.scene.globe,
         imageryProviderViewModels : imageryViewModels,
         terrainProviderViewModels : terrainViewModels
@@ -124,7 +125,7 @@ function selectedEntityChange(entity) {
                 buttonStateViewModel.selectedDrone = undefined;
                 return;
             }
-            $("#waypointEditContainer").append(`
+            $("#waypoint_edit_container").append(`
             <div id="waypointEditWidget" class="waypoint_edit">
                 <input id="waypointGroundHeightSlider" type="range" min="0" step="0.1" data-bind="value: groundHeight, valueUpdate: 'input', max: heightScale">
                 <div class="waypoint_edit_height"><span style="margin-right: 1em;">Height</span><input type="text" size="10" class="waypoint_edit_height_input" data-bind="value: groundHeight, valueUpdate: 'enterkey'"></div>
@@ -169,12 +170,14 @@ function telemetryReceive(event) {
         if (!droneStateViewModel) {
             droneStateViewModel = new DroneStateViewModel(telemetry.vehicleID);
             droneStateViewModel.trajectoryState = new TrajectoryStateViewModel();
+            droneStateViewModel.videoStreamingState = new VideoStreamingStateViewModel();
         } else {
             isFirstReceive = false;
         }
     } else {
         droneStateViewModel = new DroneStateViewModel(telemetry.vehicleID);
         droneStateViewModel.trajectoryState = new TrajectoryStateViewModel();
+        droneStateViewModel.videoStreamingState = new VideoStreamingStateViewModel();
     }
 
     if (isFirstReceive) {
@@ -201,6 +204,8 @@ function telemetryReceive(event) {
     if (telemetry.armed) {
         droneStateViewModel.trajectoryState.update(position);
     }
+
+    droneStateViewModel.videoStreamingState.streaming = telemetry.videoStreaming;
 }
 
 function mission() {
@@ -496,4 +501,67 @@ function createMissionItems(vehicleID) {
         missionItems.push(missionItem);
     }
     return missionItems;
+}
+
+function video() {
+    let droneStateViewModel = buttonStateViewModel.selectedDrone;
+
+    if (droneStateViewModel.videoStreamingState.display === true) {
+        return;
+    }
+    droneStateViewModel.videoStreamingState.display = true;
+
+    let stopFunc = undefined;
+    let videoName = displayVideoStreamingState(droneStateViewModel.vehicleID, function() {
+        droneStateViewModel.videoStreamingState.display = false;
+        if (stopFunc) {
+            stopFunc();
+        }
+    });
+
+    stopFunc = streamingStart(videoName, droneStateViewModel.vehicleID);
+}
+
+function streamon() {
+    let vehicleID = buttonStateViewModel.selectedDrone.vehicleID;
+    let data = {
+        vehicleID: vehicleID,
+        messageID: "streamon",
+        payload: {}
+    };
+    $.ajax({
+        type: 'POST',
+        url: '/client/command',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        contentType: "application/json; charset=UTF-8"
+    })
+    .done(function(data) {
+        displayMessage(vehicleID + ' stream on ok');
+    })
+    .fail(function() {
+        displayMessage(vehicleID + ' stream on ng');
+    });
+}
+
+function streamoff() {
+    let vehicleID = buttonStateViewModel.selectedDrone.vehicleID;
+    let data = {
+        vehicleID: vehicleID,
+        messageID: "streamoff",
+        payload: {}
+    };
+    $.ajax({
+        type: 'POST',
+        url: '/client/command',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        contentType: "application/json; charset=UTF-8"
+    })
+    .done(function(data) {
+        displayMessage(vehicleID + ' stream off ok');
+    })
+    .fail(function() {
+        displayMessage(vehicleID + ' stream off ng');
+    });
 }

@@ -6,11 +6,12 @@ import (
 
 // Telemetry struct
 type Telemetry struct {
-	VehicleID   string       `json:"vehicleID"`
-	Position    *Position    `json:"position,omitempty"`
-	Orientation *Orientation `json:"orientation,omitempty"`
-	Armed       bool         `json:"armed"`
-	FlightMode  string       `json:"flightMode,omitempty"`
+	VehicleID      string       `json:"vehicleID"`
+	Position       *Position    `json:"position,omitempty"`
+	Orientation    *Orientation `json:"orientation,omitempty"`
+	Armed          bool         `json:"armed"`
+	FlightMode     string       `json:"flightMode,omitempty"`
+	VideoStreaming bool         `json:"videoStreaming"`
 }
 
 // Position struct

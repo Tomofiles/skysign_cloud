@@ -25,13 +25,14 @@ const PublishInterval = 500 * time.Millisecond
 
 // Mavlink struct
 type Mavlink struct {
-	Ws         *websocket.Conn
-	Gr         *grpc.ClientConn
-	VehicleID  uint64
-	Path       []float64
-	Quat       []float64
-	Armed      bool
-	FlightMode string
+	Ws             *websocket.Conn
+	Gr             *grpc.ClientConn
+	VehicleID      uint64
+	Path           []float64
+	Quat           []float64
+	Armed          bool
+	FlightMode     string
+	VideoStreaming bool
 }
 
 // NewMavlink constructor
@@ -60,8 +61,9 @@ func (mavlink *Mavlink) SendTelemetry() {
 			Orientation: &Orientation{
 				UnitQuaternion: mavlink.Quat,
 			},
-			Armed:      mavlink.Armed,
-			FlightMode: mavlink.FlightMode,
+			Armed:          mavlink.Armed,
+			FlightMode:     mavlink.FlightMode,
+			VideoStreaming: mavlink.VideoStreaming,
 		}
 
 		websocket.JSON.Send(mavlink.Ws, posdata)
@@ -283,8 +285,8 @@ func (mavlink *Mavlink) Listen() {
 		}
 	}(mavlink, connStateStream, positionStream, quaternionStream, armedStream, flightModeStream)
 
-	armCommandStream, disarmCommandStream, takeoffCommandStream, landCommandStream, rtlCommandStream, uploadCommandStream, startCommandStream, pauseCommandStream :=
-		func(mavlink *Mavlink) (<-chan *Command, <-chan *Command, <-chan *Command, <-chan *Command, <-chan *Command, <-chan *Command, <-chan *Command, <-chan *Command) {
+	armCommandStream, disarmCommandStream, takeoffCommandStream, landCommandStream, rtlCommandStream, uploadCommandStream, startCommandStream, pauseCommandStream, streamingCommandStream :=
+		func(mavlink *Mavlink) (<-chan *Command, <-chan *Command, <-chan *Command, <-chan *Command, <-chan *Command, <-chan *Command, <-chan *Command, <-chan *Command, <-chan *Command) {
 
 			armCommandStream := make(chan *Command)
 			disarmCommandStream := make(chan *Command)
@@ -294,6 +296,7 @@ func (mavlink *Mavlink) Listen() {
 			uploadCommandStream := make(chan *Command)
 			startCommandStream := make(chan *Command)
 			pauseCommandStream := make(chan *Command)
+			streamingCommandStream := make(chan *Command)
 
 			var command Command
 			go func(mavlink *Mavlink) {
@@ -305,6 +308,7 @@ func (mavlink *Mavlink) Listen() {
 				defer close(uploadCommandStream)
 				defer close(startCommandStream)
 				defer close(pauseCommandStream)
+				defer close(streamingCommandStream)
 				for {
 					websocket.JSON.Receive(mavlink.Ws, &command)
 
@@ -325,6 +329,10 @@ func (mavlink *Mavlink) Listen() {
 						startCommandStream <- &command
 					case "pause":
 						pauseCommandStream <- &command
+					case "streamon":
+						streamingCommandStream <- &command
+					case "streamoff":
+						streamingCommandStream <- &command
 					default:
 						continue
 					}
@@ -332,7 +340,7 @@ func (mavlink *Mavlink) Listen() {
 				}
 			}(mavlink)
 
-			return armCommandStream, disarmCommandStream, takeoffCommandStream, landCommandStream, rtlCommandStream, uploadCommandStream, startCommandStream, pauseCommandStream
+			return armCommandStream, disarmCommandStream, takeoffCommandStream, landCommandStream, rtlCommandStream, uploadCommandStream, startCommandStream, pauseCommandStream, streamingCommandStream
 		}(mavlink)
 
 	go func(mavlink *Mavlink,
@@ -518,5 +526,40 @@ func (mavlink *Mavlink) Listen() {
 			log.Println("Receive MAVSDK pause response status:", response.GetMissionResult().GetResultStr())
 		}
 	}(mavlink, pauseCommandStream, mission)
+
+	go func(mavlink *Mavlink,
+		streamingCommandStream <-chan *Command) {
+
+		var done chan interface{}
+		defer func() {
+			if done != nil {
+				close(done)
+			}
+		}()
+
+		for {
+			command := <-streamingCommandStream
+
+			if command.MessageID == "streamon" {
+				if done == nil {
+					done = make(chan interface{})
+					go streaming(done, command.VehicleID)
+
+					rwm.Lock()
+					mavlink.VideoStreaming = true
+					rwm.Unlock()
+				}
+			} else if command.MessageID == "streamoff" {
+				if done != nil {
+					close(done)
+					done = nil
+
+					rwm.Lock()
+					mavlink.VideoStreaming = false
+					rwm.Unlock()
+				}
+			}
+		}
+	}(mavlink, streamingCommandStream)
 
 }

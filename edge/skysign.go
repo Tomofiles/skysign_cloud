@@ -51,6 +51,9 @@ func main() {
 
 	go mavlink.SendTelemetry()
 
+	go audioStreaming()
+	go videoStreaming()
+
 	stop := make(chan os.Signal)
 	signal.Notify(stop, os.Interrupt)
 

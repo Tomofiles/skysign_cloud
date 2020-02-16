@@ -2,6 +2,12 @@ function ButtonStateViewModel() {
     this.selectedDrone = undefined;
     this.planning = false;
 
+    this.video = () => {
+        return this.selectedDrone !== undefined
+    },
+    this.streamed = () => {
+        return this.selectedDrone !== undefined && this.selectedDrone.videoStreamingState.display ? "selected" : ""
+    },
     this.arm = () => {
         return this.selectedDrone !== undefined
     },
@@ -34,8 +40,15 @@ function ButtonStateViewModel() {
     },
     this.clear = () => {
         return this.selectedDrone !== undefined && this.selected() && this.selectedDrone.missionState !== undefined && this.selectedDrone.missionState.missionPoints.length !== 0
+    },
+    this.streamon = () => {
+        return this.selectedDrone !== undefined && !this.selectedDrone.videoStreamingState.streaming
+    },
+    this.streamoff = () => {
+        return this.selectedDrone !== undefined && this.selectedDrone.videoStreamingState.streaming
     }
 
+    Cesium.knockout.track(this);
     return this
 };
 
@@ -44,6 +57,7 @@ function DroneStateViewModel(vehicleID) {
     this.droneState = undefined;
     this.missionState = undefined;
     this.trajectoryState = undefined;
+    this.videoStreamingState = undefined;
 
     Cesium.knockout.track(this);
     return this;
@@ -162,4 +176,19 @@ TrajectoryStateViewModel.prototype.update = function (point) {
 TrajectoryStateViewModel.prototype.removeAll = function () {
     this.trajectoryShow = false;
     this.trajectoryPoints = [];
+}
+
+function VideoStreamingStateViewModel() {
+    this.display = false;
+    this.streaming = false;
+
+    this.streamon = () => {
+        return !this.streaming
+    },
+    this.streamoff = () => {
+        return this.streaming
+    }
+
+    Cesium.knockout.track(this);
+    return this;
 }
