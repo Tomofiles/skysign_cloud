@@ -22,6 +22,7 @@ Skysignは以下の特徴を備えています。
 詳細は以下のブログをご覧ください。
 
 http://tomofiles.hatenablog.com/entry/2020/01/22/123128
+
 http://tomofiles.hatenablog.com/entry/2020/02/24/220709
 
 ## Licence
